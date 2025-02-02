@@ -26,10 +26,12 @@
 
 #include "STM32F103C8T6.h"
 
+#define EXTI0_IRQNumber     (6u)
+
 int main(void)
 {
-    uint32_t index = 0;
-    uint32_t press = 0;
+    uint32_t irq_index = EXTI0_IRQNumber / 32;
+    uint32_t irq_pos   = EXTI0_IRQNumber % 32;
     /* Enable clock for port C */
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN(1u);
 
@@ -53,20 +55,36 @@ int main(void)
     /* Refer Table 20. Port bit configuration table */
     GPIOA->ODR |= GPIO_BSRR_BS0(1u);
 
+    /**
+     * Configure EXTI for line 0 (button was connect to PTA0, pull-up)
+     * Press button -> data change from 1 to 0, so setup interrupt but falling edge
+     */
+    EXTI->FTSR |= EXTI_FTSR_TR0_MASK;   /* falling edge */
+    EXTI->IMR  |= EXTI_IMR_MR0_MASK;    /* enable interrupt for line 0 */
+
+    /**
+     * Setup NVIC block: Clear pending for EXTI0 and set IRQ enable
+     * This program use only 1 IRQ, no priority set up is needed
+     */
+    NVIC->ICPR[irq_index] &= ~(1u << irq_pos);
+    NVIC->ISER[irq_index] |= (1u << irq_pos);
+
     /* Loop forever */
     while (1)
     {
-        /* Read PTA0 */
-
-        press = (GPIOA->IDR) & GPIO_IDR_IDR0_MASK;
-
-        if (0 == press)
-        {
-            for(index = 0; index<200000; index++);  /* debounce */
-            if (0 == press)
-            {
-                GPIOC->ODR ^= GPIO_ODR_ODR13_MASK;
-            }
-        }
     }
+}
+
+void EXTI0_IRQHandler(void)
+{
+    uint32_t index;
+
+    /* Clear pending flag */
+    EXTI->PR   |= EXTI_PR_PR0_MASK;
+
+    /* Debounce */
+    for (index = 0; index < 10000; index++);
+
+    /* Toggle PC13 */
+    GPIOC->ODR ^= GPIO_ODR_ODR13_MASK;
 }

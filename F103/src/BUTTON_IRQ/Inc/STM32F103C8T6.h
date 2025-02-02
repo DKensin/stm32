@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 /*******************************************************************************************************************
- * Peripheral Hardware Abstraction Layer for RCC                                                                        *
+ * Peripheral Hardware Abstraction Layer for RCC                                                                   *
  *******************************************************************************************************************
  */
 
@@ -34,7 +34,7 @@ typedef struct
 #define RCC_APB2ENR_IOPCEN(x)       (((x) << RCC_APB2ENR_IOPCEN_SHIFT) & (RCC_APB2ENR_IOPCEN_MASK))
 
 /*******************************************************************************************************************
- * Peripheral Hardware Abstraction Layer for GPIO                                                                       *
+ * Peripheral Hardware Abstraction Layer for GPIO                                                                  *
  *******************************************************************************************************************
  */
 
@@ -89,5 +89,58 @@ typedef struct
 #define GPIO_BSRR_BR13_MASK         (0x20000000u)
 #define GPIO_BSRR_BR13(x)           (((x) << GPIO_BSRR_BR13_SHIFT) & (GPIO_BSRR_BR13_MASK))
 
+/*******************************************************************************************************************
+ * Peripheral Hardware Abstraction Layer for EXTI                                                                  *
+ *******************************************************************************************************************
+ */
+
+typedef struct
+{
+    uint32_t IMR;
+    uint32_t EMR;
+    uint32_t RTSR;
+    uint32_t FTSR;
+    uint32_t SWIER;
+    uint32_t PR;
+} EXTI_Type;
+
+#define EXTI_BASE                   (0x40010400u)
+#define EXTI                        ((EXTI_Type *)EXTI_BASE)
+
+#define EXTI_FTSR_TR0_SHIFT         (0u)
+#define EXTI_FTSR_TR0_MASK          (0x1u)
+#define EXTI_FTSR_TR0(x)            (((x) << EXTI_FTSR_TR0_SHIFT) & (EXTI_FTSR_TR0_MASK))
+
+#define EXTI_IMR_MR0_SHIFT          (0u)
+#define EXTI_IMR_MR0_MASK           (0x1u)
+
+#define EXTI_PR_PR0_SHIFT           (0u)
+#define EXTI_PR_PR0_MASK            (0x1u)
+#define EXTI_PR_PR0(x)              (((x) << EXTI_PR_PR0_SHIFT) & (EXTI_PR_PR0_MASK))
+
+/*******************************************************************************************************************
+ * Peripheral Hardware Abstraction Layer for NVIC                                                                  *
+ *******************************************************************************************************************
+ */
+
+typedef struct
+{
+    uint32_t ISER[3];
+    uint32_t RESERVED_0[29];
+    uint32_t ICER[3];
+    uint32_t RESERVED_1[29];
+    uint32_t ISPR[3];
+    uint32_t RESERVED_2[29];
+    uint32_t ICPR[3];
+    uint32_t RESERVED_3[29];
+    uint32_t IABR[3];
+    uint32_t RESERVED_4[29];
+    uint32_t IPR[9];
+    uint32_t RESERVED_5[695];
+    uint32_t STIR;
+} NVIC_Type;
+
+#define NVIC_BASE                   (0xE000E100u)
+#define NVIC                        ((NVIC_Type *)NVIC_BASE)
 
 #endif /* _STM32F103C8T6_H__ */
