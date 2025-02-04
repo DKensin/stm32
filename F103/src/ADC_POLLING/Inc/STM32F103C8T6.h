@@ -1,0 +1,266 @@
+#ifndef _STM32F103C8T6_H__
+#define _STM32F103C8T6_H__
+
+#include <stdint.h>
+
+/*******************************************************************************************************************
+ * Peripheral Hardware Abstraction Layer for RCC                                                                   *
+ *******************************************************************************************************************
+ */
+
+typedef struct
+{
+    uint32_t CR;
+    uint32_t CFGR;
+    uint32_t CIR;
+    uint32_t APB2RSTR;
+    uint32_t APB1RSTR;
+    uint32_t AHBENR;
+    uint32_t APB2ENR;
+    uint32_t APB1ENR;
+    uint32_t BDCR;
+    uint32_t CSR;
+} RCC_Type;
+
+#define RCC_BASE                    (0x40021000u)
+#define RCC                         ((RCC_Type *)RCC_BASE)
+
+#define RCC_APB1ENR_TIM2EN_SHIFT    (0u)
+#define RCC_APB1ENR_TIM2EN_MASK     (0x1u)
+#define RCC_APB1ENR_TIM2EN(x)       (((x) << RCC_APB1ENR_TIM2EN_SHIFT) & (RCC_APB1ENR_TIM2EN_MASK))
+
+#define RCC_APB2ENR_IOPAEN_SHIFT    (2u)
+#define RCC_APB2ENR_IOPAEN_MASK     (0x4u)
+#define RCC_APB2ENR_IOPAEN(x)       (((x) << RCC_APB2ENR_IOPAEN_SHIFT) & (RCC_APB2ENR_IOPAEN_MASK))
+
+#define RCC_APB2ENR_ADC1EN_SHIFT    (9u)
+#define RCC_APB2ENR_ADC1EN_MASK     (0x200u)
+#define RCC_APB2ENR_ADC1EN(x)       (((x) << RCC_APB2ENR_ADC1EN_SHIFT) & (RCC_APB2ENR_ADC1EN_MASK))
+
+/*******************************************************************************************************************
+ * Peripheral Hardware Abstraction Layer for GPIO                                                                  *
+ *******************************************************************************************************************
+ */
+
+typedef struct
+{
+    uint32_t CRL;
+    uint32_t CRH;
+    uint32_t IDR;
+    uint32_t ODR;
+    uint32_t BSRR;
+    uint32_t BRR;
+    uint32_t LCKR;
+} GPIO_Type;
+
+
+#define GPIOA_BASE                  (0x40010800u)
+#define GPIOA                       ((GPIO_Type *)GPIOA_BASE)
+#define GPIOC_BASE                  (0x40011000u)
+#define GPIOC                       ((GPIO_Type *)GPIOC_BASE)
+
+#define GPIO_CRL_MODE0_SHIFT        (0u)
+#define GPIO_CRL_MODE0_MASK         (0x3u)
+#define GPIO_CRL_MODE0(x)           (((x) << GPIO_CRL_MODE0_SHIFT) & (GPIO_CRL_MODE0_MASK))
+
+#define GPIO_CRL_CNF0_SHIFT         (2u)
+#define GPIO_CRL_CNF0_MASK          (0xCu)
+#define GPIO_CRL_CNF0(x)            (((x) << GPIO_CRL_CNF0_SHIFT) & (GPIO_CRL_CNF0_MASK))
+
+#define GPIO_CRH_MODE13_SHIFT       (20u)
+#define GPIO_CRH_MODE13_MASK        (0x300000u)
+#define GPIO_CRH_MODE13(x)          (((x) << GPIO_CRH_MODE13_SHIFT) & (GPIO_CRH_MODE13_MASK))
+
+#define GPIO_CRH_CNF13_SHIFT        (22u)
+#define GPIO_CRH_CNF13_MASK         (0xC00000u)
+#define GPIO_CRH_CNF13(x)           (((x) << GPIO_CRH_CNF13_SHIFT) & (GPIO_CRH_CNF13_MASK))
+
+#define GPIO_IDR_IDR0_MASK          (0x1u)
+
+#define GPIO_ODR_ODR13_SHIFT        (13u)
+#define GPIO_ODR_ODR13_MASK         (0x2000u)
+#define GPIO_ODR_ODR13(x)           (((x) << GPIO_ODR_ODR13_SHIFT) & (GPIO_ODR_ODR13_MASK))
+
+#define GPIO_BSRR_BS0_SHIFT         (0u)
+#define GPIO_BSRR_BS0_MASK          (0x1u)
+#define GPIO_BSRR_BS0(x)            (((x) << GPIO_BSRR_BS0_SHIFT) & (GPIO_BSRR_BS0_MASK))
+
+#define GPIO_BSRR_BS13_SHIFT        (13u)
+#define GPIO_BSRR_BS13_MASK         (0x2000u)
+#define GPIO_BSRR_BS13(x)           (((x) << GPIO_BSRR_BS13_SHIFT) & (GPIO_BSRR_BS13_MASK))
+
+#define GPIO_BSRR_BR13_SHIFT        (29u)
+#define GPIO_BSRR_BR13_MASK         (0x20000000u)
+#define GPIO_BSRR_BR13(x)           (((x) << GPIO_BSRR_BR13_SHIFT) & (GPIO_BSRR_BR13_MASK))
+
+/*******************************************************************************************************************
+ * Peripheral Hardware Abstraction Layer for EXTI                                                                  *
+ *******************************************************************************************************************
+ */
+
+typedef struct
+{
+    uint32_t IMR;
+    uint32_t EMR;
+    uint32_t RTSR;
+    uint32_t FTSR;
+    uint32_t SWIER;
+    uint32_t PR;
+} EXTI_Type;
+
+#define EXTI_BASE                   (0x40010400u)
+#define EXTI                        ((EXTI_Type *)EXTI_BASE)
+
+#define EXTI_FTSR_TR0_SHIFT         (0u)
+#define EXTI_FTSR_TR0_MASK          (0x1u)
+#define EXTI_FTSR_TR0(x)            (((x) << EXTI_FTSR_TR0_SHIFT) & (EXTI_FTSR_TR0_MASK))
+
+#define EXTI_IMR_MR0_SHIFT          (0u)
+#define EXTI_IMR_MR0_MASK           (0x1u)
+
+#define EXTI_PR_PR0_SHIFT           (0u)
+#define EXTI_PR_PR0_MASK            (0x1u)
+#define EXTI_PR_PR0(x)              (((x) << EXTI_PR_PR0_SHIFT) & (EXTI_PR_PR0_MASK))
+
+/*******************************************************************************************************************
+ * Peripheral Hardware Abstraction Layer for NVIC                                                                  *
+ *******************************************************************************************************************
+ */
+
+typedef struct
+{
+    uint32_t ISER[3];
+    uint32_t RESERVED_0[29];
+    uint32_t ICER[3];
+    uint32_t RESERVED_1[29];
+    uint32_t ISPR[3];
+    uint32_t RESERVED_2[29];
+    uint32_t ICPR[3];
+    uint32_t RESERVED_3[29];
+    uint32_t IABR[3];
+    uint32_t RESERVED_4[29];
+    uint32_t IPR[9];
+    uint32_t RESERVED_5[695];
+    uint32_t STIR;
+} NVIC_Type;
+
+#define NVIC_BASE                   (0xE000E100u)
+#define NVIC                        ((NVIC_Type *)NVIC_BASE)
+
+/*******************************************************************************************************************
+ * Peripheral Hardware Abstraction Layer for ADC                                                                   *
+ *******************************************************************************************************************
+ */
+
+typedef struct
+{
+    uint32_t SR;
+    uint32_t CR1;
+    uint32_t CR2;
+    uint32_t SMPR1;
+    uint32_t SMPR2;
+    uint32_t JOFR1;
+    uint32_t JOFR2;
+    uint32_t JOFR3;
+    uint32_t JOFR4;
+    uint32_t HTR;
+    uint32_t LTR;
+    uint32_t SQR1;
+    uint32_t SQR2;
+    uint32_t SQR3;
+    uint32_t JSQR;
+    uint32_t JDR1;
+    uint32_t JDR2;
+    uint32_t JDR3;
+    uint32_t JDR4;
+    uint32_t DR;
+} ADC_Type;
+
+#define ADC1_BASE                   (0x40012400u)
+#define ADC1                        ((ADC_Type *)ADC1_BASE)
+
+#define ADC_SR_EOC_SHIFT            (1u)
+#define ADC_SR_EOC_MASK             (0x2u)
+#define ADC_SR_EOC(x)               (((x) << ADC_SR_EOC_SHIFT) & (ADC_SR_EOC_MASK))
+
+#define ADC_CR1_SCAN_SHIFT          (8u)
+#define ADC_CR1_SCAN_MASK           (0x100u)
+#define ADC_CR1_SCAN(x)             (((x) << ADC_CR1_SCAN_SHIFT) & (ADC_CR1_SCAN_MASK))
+
+#define ADC_CR2_ADON_SHIFT          (0u)
+#define ADC_CR2_ADON_MASK           (0x1u)
+#define ADC_CR2_ADON(x)             (((x) << ADC_CR2_ADON_SHIFT) & (ADC_CR2_ADON_MASK))
+
+#define ADC_CR2_CONT_SHIFT          (1u)
+#define ADC_CR2_CONT_MASK           (0x2u)
+#define ADC_CR2_CONT(x)             (((x) << ADC_CR2_CONT_SHIFT) & (ADC_CR2_CONT_MASK))
+
+#define ADC_CR2_ALIGN_SHIFT         (11u)
+#define ADC_CR2_ALIGN_MASK          (0x800u)
+#define ADC_CR2_ALIGN(x)            (((x) << ADC_CR2_ALIGN_SHIFT) & (ADC_CR2_ALIGN_MASK))
+
+#define ADC_CR2_SWSTART_SHIFT       (22u)
+#define ADC_CR2_SWSTART_MASK        (0x400000u)
+#define ADC_CR2_SWSTART(x)          (((x) << ADC_CR2_SWSTART_SHIFT) & (ADC_CR2_SWSTART_MASK))
+
+#define ADC_SMPR2_SMP0_SHIFT        (0u)
+#define ADC_SMPR2_SMP0_MASK         (0x7u)
+#define ADC_SMPR2_SMP0(x)           (((x) << ADC_SMPR2_SMP0_SHIFT) & (ADC_SMPR2_SMP0_MASK))
+
+#define ADC_SQR1_L_SHIFT            (20u)
+#define ADC_SQR1_L_MASK             (0xF00000u)
+#define ADC_SQR1_L(x)               (((x) << ADC_SQR1_L_SHIFT) & (ADC_SQR1_L_MASK))
+
+#define ADC_SQR3_SQ1_SHIFT          (0u)
+#define ADC_SQR3_SQ1_MASK           (0x1Fu)
+#define ADC_SQR3_SQ1(x)             (((x) << ADC_SQR3_SQ1_SHIFT) & (ADC_SQR3_SQ1_MASK))
+
+#define ADC_DR_DATA_SHIFT           (0u)
+#define ADC_DR_DATA_MASK            (0xFFFFu)
+#define ADC_DR_DATA(x)              (((x) << ADC_DR_DATA_SHIFT) & (ADC_DR_DATA_MASK))
+
+/*******************************************************************************************************************
+ * Peripheral Hardware Access Layer for TIMER                                                                      *
+ *******************************************************************************************************************
+ */
+
+typedef struct
+{
+    uint32_t CR1;
+    uint32_t CR2;
+    uint32_t SMCR;
+    uint32_t DIER;
+    uint32_t SR;
+    uint32_t EGR;
+    uint32_t CCMR1;
+    uint32_t CCMR2;
+    uint32_t CCER;
+    uint32_t CNT;
+    uint32_t PSC;
+    uint32_t ARR;
+    uint32_t RESERVED_1;
+    uint32_t CCR1;
+    uint32_t CCR2;
+    uint32_t CCR3;
+    uint32_t CCR4;
+    uint32_t RESERVED_2;
+    uint32_t DCR;
+    uint32_t DMAR;
+} TIM_Type;
+
+#define TIM2_BASE                   (0x40000000u)
+#define TIM2                        ((TIM_Type *)TIM2_BASE)
+
+#define TIM_CR1_CEN_SHIFT           (0u)
+#define TIM_CR1_CEN_MASK            (0x1u)
+#define TIM_CR1_CEN(x)              (((x) << TIM_CR1_CEN_SHIFT) & (TIM_CR1_CEN_MASK))
+
+#define TIM_PSC_PSC_SHIFT           (0u)
+#define TIM_PSC_PSC_MASK            (0xFFFFu)
+#define TIM_PSC_PSC(x)               (((x) << TIM_PSC_PSC_SHIFT) & (TIM_PSC_PSC_MASK))
+
+#define TIM_ARR_ARR_SHIFT           (0u)
+#define TIM_ARR_ARR_MASK            (0xFFFFu)
+#define TIM_ARR_ARR(x)               (((x) << TIM_ARR_ARR_SHIFT) & (TIM_ARR_ARR_MASK))
+
+#endif /* _STM32F103C8T6_H__ */
