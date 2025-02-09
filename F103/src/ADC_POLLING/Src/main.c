@@ -88,12 +88,13 @@ int main(void)
     /* Conversion starts when ADON bit is set for a second time by software after ADC power-up time (tSTAB). */
     ADC1->CR2 |= ADC_CR2_ADON_MASK;
 
+    ADC1->CR2 |= ADC_CR2_SWSTART_MASK;      /* Start ADC conversion */
+
     /* Loop forever */
     while (1)
     {
         /* Clear EOC flag */
         ADC1->SR &= ~ADC_SR_EOC_MASK;           /* Write 0 to clear */
-        ADC1->CR2 |= ADC_CR2_SWSTART_MASK;      /* Start ADC conversion */
         /* Wait until conversion finish */
         while (!((ADC1->SR & ADC_SR_EOC_MASK) >> ADC_SR_EOC_SHIFT));
         /* Read ADC data */
