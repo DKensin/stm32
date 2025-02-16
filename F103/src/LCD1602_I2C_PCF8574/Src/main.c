@@ -17,12 +17,65 @@
  ******************************************************************************
  */
 
-#if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
-#endif
+#include "STM32F103C8T6.h"
+#include "I2c.h"
+
+void delay_us(uint32_t us);
+void delay_ms(uint32_t ms);
 
 int main(void)
 {
+    uint8_t slave_address = 0;
+
+    /* Enable clock for port C */
+    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN(1u);
+
+    GPIOB->CRH &= ~(GPIO_CRL_MODE6_MASK | GPIO_CRL_CNF6_MASK);
+    GPIOB->CRH &= ~(GPIO_CRL_MODE7_MASK | GPIO_CRL_CNF7_MASK);
+    /* Set PB6, PB7 to  ALT output and open-drain mode, 50MHz */
+    GPIOB->CRL |= GPIO_CRL_MODE6(3) | GPIO_CRL_CNF6(3);     /* I2C1_SCL */
+    GPIOB->CRL |= GPIO_CRL_MODE7(3) | GPIO_CRL_CNF7(3);     /* I2C1_SDA */
+
+    /* Enable clock for TIM2 */
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN(1u);
+
+    /**
+     * Setup clock frequency for TIM2. When POR (power of reset):
+     * RCC_CR:      Reset value: 0x0000 XX83:   HSION and HSIRDY -> clock source is HSI (8MHz)
+     * RCC_CFRG:    Reset value: 0x0
+     *      + PLLSRC = 0 -> HSI oscillator clock / 2 selected as PLL input clock (4MHz)
+     *      + PLLMUL = 0 -> PLL input clock * 2 (8MHz)
+     *      + SW = 0 ->  HSI selected as system clock (8MHz)
+     *      + HPRE = 0 -> SYSCLK not divided
+     *      + PPRE1 = 0 -> HCLK not divided
+     * Summary: PCLK1 = 8MHz
+     */
+
+    /* Set PSR = 7 -> Fclock = CK_PSC / (PSC[15:0] + 1) = 8 / (7 + 1) = 1MHz */
+    TIM2->PSC = TIM_PSC_PSC(7u);
+    TIM2->ARR = TIM_ARR_ARR(0xFFFFu);
+
+    /* Enable counter */
+    TIM2->CR1 |= TIM_CR1_CEN(1u);
+
+    I2C_Init();
+    /* Scan I2C bus to get slave address */
+    slave_address = I2C_MasterScanBus();
+
     /* Loop forever */
-	for(;;);
+    while (1)
+    {
+    }
+}
+
+void delay_us(uint32_t us)
+{
+    TIM2->CNT = 0;
+    while ((TIM2->CNT) < us);   /* delay 1 us */
+}
+
+void delay_ms(uint32_t ms)
+{
+    TIM2->CNT = 0;
+    while ((TIM2->CNT) < (1000*ms));
 }
