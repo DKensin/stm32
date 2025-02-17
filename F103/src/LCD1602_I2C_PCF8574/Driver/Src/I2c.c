@@ -92,9 +92,10 @@ uint8_t I2C_MasterScanBus(void)
     return address;
 }
 
-void I2C_MasterTransmit(I2C_Type * base, uint8_t data, uint8_t slave_address)
+void I2C_MasterTransmit(I2C_Type * base, uint8_t *buff, uint32_t len, uint8_t slave_address)
 {
     uint8_t temp;
+    uint8_t index = 0;
 
     /* Generate START condition */
     I2C1->CR1 |= I2C_CR1_START_MASK;
@@ -112,10 +113,14 @@ void I2C_MasterTransmit(I2C_Type * base, uint8_t data, uint8_t slave_address)
     /* Read SR2 to clear ADDR flag */
     (void)I2C1->SR2;
 
-    /* Wait until DR and shift register is empty */
-    while (!(I2C1->SR1 & I2C_SR1_TXE_MASK) >> I2C_SR1_TXE_SHIFT);
-    /* Write data */
-    I2C1->DR = data & I2C_DR_DR_MASK;
+    for (index = 0; index <len; index++)
+    {
+        /* Wait until DR and shift register is empty */
+        while (!(I2C1->SR1 & I2C_SR1_TXE_MASK) >> I2C_SR1_TXE_SHIFT);
+        /* Write data */
+        I2C1->DR = buff[index] & I2C_DR_DR_MASK;
+    }
+
     /* Wait TXE flag was set */
     while (!(I2C1->SR1 & I2C_SR1_TXE_MASK) >> I2C_SR1_TXE_SHIFT);
     /* Wait BTF flag was set */

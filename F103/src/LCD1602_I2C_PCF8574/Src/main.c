@@ -19,6 +19,7 @@
 
 #include "STM32F103C8T6.h"
 #include "I2c.h"
+#include "Lcd1602_I2c.h"
 
 void delay_us(uint32_t us);
 void delay_ms(uint32_t ms);
@@ -26,6 +27,7 @@ void delay_ms(uint32_t ms);
 int main(void)
 {
     uint8_t slave_address = 0;
+    uint8_t str[10] = "TOAN";
 
     /* Enable clock for port C */
     RCC->APB2ENR |= RCC_APB2ENR_IOPBEN(1u);
@@ -61,6 +63,18 @@ int main(void)
     I2C_Init();
     /* Scan I2C bus to get slave address */
     slave_address = I2C_MasterScanBus();
+
+    /* Update scan address to LCD lib */
+    lcd_update_address(slave_address);
+
+    lcd_init();
+    lcd_clear();
+
+    lcd_put_cur(0, 0);
+    lcd_send_string(str);
+
+    lcd_put_cur(1, 0);
+    lcd_send_string(str);
 
     /* Loop forever */
     while (1)

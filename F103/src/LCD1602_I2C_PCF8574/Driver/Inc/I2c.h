@@ -12,6 +12,6 @@
 
 void I2C_Init(void);
 uint8_t I2C_MasterScanBus(void);
-void I2C_MasterTransmit(I2C_Type * base, uint8_t data, uint8_t slave_address);
+void I2C_MasterTransmit(I2C_Type * base, uint8_t *buff, uint32_t len, uint8_t slave_address);
 
 #endif /* DRIVER_INC_I2C_H_ */
