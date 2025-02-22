@@ -9,12 +9,12 @@
 
 /*********** Define the LCD PINS below ****************/
 #define RS_PIN          (1u)        /* PA1 */
-#define RW_PIN          (2u)
-#define EN_PIN          (3u)
-#define DB4_PIN         (4u)
-#define DB5_PIN         (5u)
-#define DB6_PIN         (6u)
-#define DB7_PIN         (7u)
+#define RW_PIN          (2u)        /* PA2 */
+#define EN_PIN          (3u)        /* PA3 */
+#define DB4_PIN         (4u)        /* PA4 */
+#define DB5_PIN         (5u)        /* PA5 */
+#define DB6_PIN         (6u)        /* PA6 */
+#define DB7_PIN         (7u)        /* PA7 */
 
 extern void delay_us(uint32_t us);
 extern void delay_ms(uint32_t ms);
@@ -34,14 +34,12 @@ void send_to_lcd(uint8_t data, uint32_t rs)
     GPIOA->ODR |= ((((data>>1)&0x01)) << DB5_PIN);
     GPIOA->ODR |= ((((data>>0)&0x01)) << DB4_PIN);
 
-    /* Toggle EN PIN to send the data
-     * if the HCLK > 100 MHz, use the  20 us delay
-     * if the LCD still doesn't work, increase the delay_usto 50, 80 or 100..
-     */
+    /* Toggle EN PIN to send the data */
     GPIOA->ODR |= (1 << EN_PIN);
-    delay_us(20);
+    /* Wait at least 450ns */
+    delay_us(1);
     GPIOA->ODR &= ~(1 << EN_PIN);
-    delay_us(20);
+    delay_us(1);
 }
 
 void lcd_send_cmd(uint8_t cmd)
@@ -49,11 +47,12 @@ void lcd_send_cmd(uint8_t cmd)
     uint8_t datatosend;
 
     /* send upper nibble first */
-    datatosend = ((cmd>>4)&0x0f);
-    send_to_lcd(datatosend,0);  // RS must be 0 while sending command
+    datatosend = ((cmd >> 4u) & 0x0Fu);
+    /* RS must be 0 while sending command*/
+    send_to_lcd(datatosend, 0);
 
     /* send Lower Nibble */
-    datatosend = ((cmd)&0x0f);
+    datatosend = ((cmd) & 0x0Fu);
     send_to_lcd(datatosend, 0);
 }
 
@@ -62,11 +61,11 @@ void lcd_send_data(uint8_t data)
     uint8_t datatosend;
 
     /* send higher nibble */
-    datatosend = ((data>>4)&0x0f);
+    datatosend = ((data >> 4u) & 0x0Fu);
     send_to_lcd(datatosend, 1);  // rs =1 for sending data
 
     /* send Lower nibble */
-    datatosend = ((data)&0x0f);
+    datatosend = ((data) & 0x0Fu);
     send_to_lcd(datatosend, 1);
 }
 
@@ -101,21 +100,14 @@ void lcd_init (void)
     lcd_send_cmd(0x30);
     delay_ms(1);  // wait for >100us
     lcd_send_cmd(0x30);
-    delay_ms(10);
+
     lcd_send_cmd(0x20);  // 4bit mode
-    delay_ms(10);
 
   // dislay initialisation
     lcd_send_cmd(0x28); // Function set --> DL=0 (4 bit mode), N = 1 (2 line display) F = 0 (5x8 characters)
-    delay_ms(1);
-    lcd_send_cmd(0x08); //Display on/off control --> D=0,C=0, B=0  ---> display off
-    delay_ms(1);
+    lcd_send_cmd(0x0F); //Display on/off control --> D=0,C=0, B=0  ---> display off
     lcd_send_cmd(0x01);  // clear display
-    delay_ms(1);
-    delay_ms(1);
     lcd_send_cmd(0x06); //Entry mode set --> I/D = 1 (increment cursor) & S = 0 (no shift)
-    delay_ms(1);
-    lcd_send_cmd(0x0C); //Display on/off control --> D = 1, C and B = 0. (Cursor and blink, last two bits)
 }
 
 void lcd_send_string(uint8_t *str)

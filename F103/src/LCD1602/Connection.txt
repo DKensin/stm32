@@ -1,0 +1,5 @@
+The higher 4 pins of the LCD ( DB4-DB7) are connected to the microcontroller pins (PA4-PA7).
+
+RS is connected to PA1
+RW is connected to PA2
+EN is connected to PA3

@@ -63,6 +63,62 @@ typedef struct
 #define GPIO_CRL_CNF0_MASK          (0xCu)
 #define GPIO_CRL_CNF0(x)            (((x) << GPIO_CRL_CNF0_SHIFT) & (GPIO_CRL_CNF0_MASK))
 
+#define GPIO_CRL_MODE1_SHIFT        (4u)
+#define GPIO_CRL_MODE1_MASK         (0x30u)
+#define GPIO_CRL_MODE1(x)           (((x) << GPIO_CRL_MODE1_SHIFT) & (GPIO_CRL_MODE1_MASK))
+
+#define GPIO_CRL_CNF1_SHIFT         (6u)
+#define GPIO_CRL_CNF1_MASK          (0xC0u)
+#define GPIO_CRL_CNF1(x)            (((x) << GPIO_CRL_CNF1_SHIFT) & (GPIO_CRL_CNF1_MASK))
+
+#define GPIO_CRL_MODE2_SHIFT        (8u)
+#define GPIO_CRL_MODE2_MASK         (0x300u)
+#define GPIO_CRL_MODE2(x)           (((x) << GPIO_CRL_MODE2_SHIFT) & (GPIO_CRL_MODE2_MASK))
+
+#define GPIO_CRL_CNF2_SHIFT         (10u)
+#define GPIO_CRL_CNF2_MASK          (0xC00u)
+#define GPIO_CRL_CNF2(x)            (((x) << GPIO_CRL_CNF2_SHIFT) & (GPIO_CRL_CNF2_MASK))
+
+#define GPIO_CRL_MODE3_SHIFT        (12u)
+#define GPIO_CRL_MODE3_MASK         (0x3000u)
+#define GPIO_CRL_MODE3(x)           (((x) << GPIO_CRL_MODE3_SHIFT) & (GPIO_CRL_MODE3_MASK))
+
+#define GPIO_CRL_CNF3_SHIFT         (14u)
+#define GPIO_CRL_CNF3_MASK          (0xC000u)
+#define GPIO_CRL_CNF3(x)            (((x) << GPIO_CRL_CNF3_SHIFT) & (GPIO_CRL_CNF3_MASK))
+
+#define GPIO_CRL_MODE4_SHIFT        (16u)
+#define GPIO_CRL_MODE4_MASK         (0x30000u)
+#define GPIO_CRL_MODE4(x)           (((x) << GPIO_CRL_MODE4_SHIFT) & (GPIO_CRL_MODE4_MASK))
+
+#define GPIO_CRL_CNF4_SHIFT         (18u)
+#define GPIO_CRL_CNF4_MASK          (0xC0000u)
+#define GPIO_CRL_CNF4(x)            (((x) << GPIO_CRL_CNF4_SHIFT) & (GPIO_CRL_CNF4_MASK))
+
+#define GPIO_CRL_MODE5_SHIFT        (20u)
+#define GPIO_CRL_MODE5_MASK         (0x300000u)
+#define GPIO_CRL_MODE5(x)           (((x) << GPIO_CRL_MODE5_SHIFT) & (GPIO_CRL_MODE5_MASK))
+
+#define GPIO_CRL_CNF5_SHIFT         (22u)
+#define GPIO_CRL_CNF5_MASK          (0xC00000u)
+#define GPIO_CRL_CNF5(x)            (((x) << GPIO_CRL_CNF5_SHIFT) & (GPIO_CRL_CNF5_MASK))
+
+#define GPIO_CRL_MODE6_SHIFT        (24u)
+#define GPIO_CRL_MODE6_MASK         (0x3000000u)
+#define GPIO_CRL_MODE6(x)           (((x) << GPIO_CRL_MODE6_SHIFT) & (GPIO_CRL_MODE6_MASK))
+
+#define GPIO_CRL_CNF6_SHIFT         (26u)
+#define GPIO_CRL_CNF6_MASK          (0xC000000u)
+#define GPIO_CRL_CNF6(x)            (((x) << GPIO_CRL_CNF6_SHIFT) & (GPIO_CRL_CNF6_MASK))
+
+#define GPIO_CRL_MODE7_SHIFT        (28u)
+#define GPIO_CRL_MODE7_MASK         (0x30000000u)
+#define GPIO_CRL_MODE7(x)           (((x) << GPIO_CRL_MODE7_SHIFT) & (GPIO_CRL_MODE7_MASK))
+
+#define GPIO_CRL_CNF7_SHIFT         (30u)
+#define GPIO_CRL_CNF7_MASK          (0xC0000000u)
+#define GPIO_CRL_CNF7(x)            (((x) << GPIO_CRL_CNF7_SHIFT) & (GPIO_CRL_CNF7_MASK))
+
 #define GPIO_CRH_MODE13_SHIFT       (20u)
 #define GPIO_CRH_MODE13_MASK        (0x300000u)
 #define GPIO_CRH_MODE13(x)          (((x) << GPIO_CRH_MODE13_SHIFT) & (GPIO_CRH_MODE13_MASK))

@@ -27,25 +27,16 @@
 #include "STM32F103C8T6.h"
 #include "LCD1602.h"
 
+void gpio_init(void);
+void timer2_init(void);
 void delay_us(uint32_t us);
 void delay_ms(uint32_t ms);
-void delay_s(uint32_t s);
 
 int main(void)
 {
-    /* Enable clock for port A */
-    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN(1u);
-
-    /* Enable clock for TIM2 */
-    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN(1u);
-    /* Set PSR = 7 -> Fclock = CK_PSC / (PSC[15:0] + 1) = 8 / (7 + 1) = 1MHz */
-    TIM2->PSC = TIM_PSC_PSC(7u);
-    TIM2->ARR = TIM_ARR_ARR(0xFFFFu);
-
-    /* Enable counter */
-    TIM2->CR1 |= TIM_CR1_CEN(1u);
-
-    lcd_init ();
+    gpio_init();
+    timer2_init();
+    lcd_init();
 
     lcd_put_cur(0, 0);
     lcd_send_string("HELLO ");
@@ -61,14 +52,65 @@ int main(void)
     }
 }
 
+void gpio_init(void)
+{
+    /* Enable clock for port A */
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN(1u);
+
+    /* Set PA1: RS to GPIO output, push-pull */
+    GPIOA->CRL &= ~(GPIO_CRL_MODE1_MASK | GPIO_CRL_CNF1_MASK);
+    GPIOA->CRL |= GPIO_CRL_MODE1(2);
+
+    /* Set PA2: Rw to GPIO output, push-pull */
+    GPIOA->CRL &= ~(GPIO_CRL_MODE2_MASK | GPIO_CRL_CNF2_MASK);
+    GPIOA->CRL |= GPIO_CRL_MODE2(2);
+
+    /* Set PA3: EN to GPIO output, push-pull */
+    GPIOA->CRL &= ~(GPIO_CRL_MODE3_MASK | GPIO_CRL_CNF3_MASK);
+    GPIOA->CRL |= GPIO_CRL_MODE3(2);
+
+    /* Set PA4: DB4 to GPIO output, push-pull */
+    GPIOA->CRL &= ~(GPIO_CRL_MODE4_MASK | GPIO_CRL_CNF4_MASK);
+    GPIOA->CRL |= GPIO_CRL_MODE4(2);
+
+    /* Set PA5: DB5 to GPIO output, push-pull */
+    GPIOA->CRL &= ~(GPIO_CRL_MODE5_MASK | GPIO_CRL_CNF5_MASK);
+    GPIOA->CRL |= GPIO_CRL_MODE5(2);
+
+    /* Set PA6: DB6 to GPIO output, push-pull */
+    GPIOA->CRL &= ~(GPIO_CRL_MODE6_MASK | GPIO_CRL_CNF6_MASK);
+    GPIOA->CRL |= GPIO_CRL_MODE6(2);
+
+    /* Set PA7: DB7 to GPIO output, push-pull */
+    GPIOA->CRL &= ~(GPIO_CRL_MODE7_MASK | GPIO_CRL_CNF7_MASK);
+    GPIOA->CRL |= GPIO_CRL_MODE7(2);
+}
+
+void timer2_init(void)
+{
+    /* Enable clock for TIM2 */
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN(1u);
+    /* Set PSR = 7 -> Fclock = CK_PSC / (PSC[15:0] + 1) = 8 / (7 + 1) = 1MHz */
+    TIM2->PSC = TIM_PSC_PSC(7u);
+    TIM2->ARR = TIM_ARR_ARR(0xFFFFu);
+
+    /* Enable counter */
+    TIM2->CR1 |= TIM_CR1_CEN(1u);
+}
+
 void delay_us(uint32_t us)
 {
     TIM2->CNT = 0;
-    while ((TIM2->CNT) < us);   /* delay 1 us */
+    while ((TIM2->CNT) < us)
+        ; /* delay 1 us */
 }
 
 void delay_ms(uint32_t ms)
 {
-    TIM2->CNT = 0;
-    while ((TIM2->CNT) < (ms * 1000));
+    uint32_t count;
+
+    for (count = 0; count < ms; count++)
+    {
+        delay_us(1000); /* delay 1ms */
+    }
 }
