@@ -87,7 +87,7 @@ void lcd_init (void)
     lcd_send_cmd (0x20);  // 4bit mode
     delay_ms(10);
 
-  // dislay initialisation
+    // dislay initialisation
     lcd_send_cmd (0x28); // Function set --> DL=0 (4 bit mode), N = 1 (2 line display) F = 0 (5x8 uint8_tacters)
     delay_ms(1);
     lcd_send_cmd (0x08); //Display on/off control --> D=0,C=0, B=0  ---> display off

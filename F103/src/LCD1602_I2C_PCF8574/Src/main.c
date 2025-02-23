@@ -19,17 +19,45 @@
 
 #include "STM32F103C8T6.h"
 #include "I2c.h"
-#include "Lcd1602_I2c.h"
+#include "LCD1602.h"
 
+void gpio_init(void);
+void timer2_init(void);
 void delay_us(uint32_t us);
 void delay_ms(uint32_t ms);
 
 int main(void)
 {
     uint8_t slave_address = 0;
-    uint8_t str[10] = "TOAN";
+    uint8_t str[10] = "HELLO";
 
-    /* Enable clock for port C */
+    gpio_init();
+    timer2_init();
+
+    I2C_Init();
+    /* Scan I2C bus to get slave address */
+    slave_address = I2C_MasterScanBus();
+
+    /* Update scan address to LCD lib */
+    lcd_update_address(slave_address);
+
+    lcd_init();
+
+    lcd_put_cur(0, 0);
+    lcd_send_string(str);
+
+    lcd_put_cur(1, 0);
+    lcd_send_string(str);
+
+    /* Loop forever */
+    while (1)
+    {
+    }
+}
+
+void gpio_init(void)
+{
+    /* Enable clock for port B */
     RCC->APB2ENR |= RCC_APB2ENR_IOPBEN(1u);
 
     GPIOB->CRH &= ~(GPIO_CRL_MODE6_MASK | GPIO_CRL_CNF6_MASK);
@@ -37,7 +65,10 @@ int main(void)
     /* Set PB6, PB7 to  ALT output and open-drain mode, 50MHz */
     GPIOB->CRL |= GPIO_CRL_MODE6(3) | GPIO_CRL_CNF6(3);     /* I2C1_SCL */
     GPIOB->CRL |= GPIO_CRL_MODE7(3) | GPIO_CRL_CNF7(3);     /* I2C1_SDA */
+}
 
+void timer2_init(void)
+{
     /* Enable clock for TIM2 */
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN(1u);
 
@@ -59,27 +90,6 @@ int main(void)
 
     /* Enable counter */
     TIM2->CR1 |= TIM_CR1_CEN(1u);
-
-    I2C_Init();
-    /* Scan I2C bus to get slave address */
-    slave_address = I2C_MasterScanBus();
-
-    /* Update scan address to LCD lib */
-    lcd_update_address(slave_address);
-
-    lcd_init();
-    lcd_clear();
-
-    lcd_put_cur(0, 0);
-    lcd_send_string(str);
-
-    lcd_put_cur(1, 0);
-    lcd_send_string(str);
-
-    /* Loop forever */
-    while (1)
-    {
-    }
 }
 
 void delay_us(uint32_t us)

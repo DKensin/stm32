@@ -44,7 +44,7 @@ int main(void)
     lcd_send_string("FROM");
 
     lcd_put_cur(1, 0);
-    lcd_send_string("CONTROLLERS TECH");
+    lcd_send_string("ITPLUS");
 
     /* Loop forever */
     while (1)
@@ -101,8 +101,7 @@ void timer2_init(void)
 void delay_us(uint32_t us)
 {
     TIM2->CNT = 0;
-    while ((TIM2->CNT) < us)
-        ; /* delay 1 us */
+    while ((TIM2->CNT) < us); /* delay 1 us */
 }
 
 void delay_ms(uint32_t ms)
