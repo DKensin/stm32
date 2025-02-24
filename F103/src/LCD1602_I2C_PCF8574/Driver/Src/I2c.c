@@ -12,7 +12,9 @@ void I2C_Init(void)
 {
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN_MASK;    /* Enable clock for I2C1 */
 
-    I2C1->CR1 |= I2C_CR1_ACK_MASK;              /* Enable ACK */
+    I2C1->CR1 |= (1 << 15);
+    I2C1->CR1 &= ~(1 << 15);
+
     I2C1->CR1 &= ~I2C_CR1_NOSTRETCH_MASK;       /* Enable clock stretching */
 
     I2C1->CR2 &= ~I2C_CR2_FREQ_MASK;
@@ -37,6 +39,7 @@ void I2C_Init(void)
     I2C1->TRISE |= I2C_TRISE_TRISE(9);
 
     I2C1->CR1 |= I2C_CR1_PE_MASK;               /* Enable I2C peripheral */
+    I2C1->CR1 |= I2C_CR1_ACK_MASK;              /* Enable ACK */
 }
 
 bool I2C_MasterScanAddress(I2C_Type * base, uint8_t address)
@@ -47,7 +50,7 @@ bool I2C_MasterScanAddress(I2C_Type * base, uint8_t address)
     /* Generate START condition */
     base->CR1 |= I2C_CR1_START_MASK;
     /* Wait until SB was set */
-    while (!(base->SR1 & I2C_SR1_SB_MASK) >> I2C_SR1_SB_SHIFT);
+    while (!(base->SR1 & I2C_SR1_SB_MASK));
 
     /* Generate slave address */
     temp = address << 1;
@@ -59,8 +62,6 @@ bool I2C_MasterScanAddress(I2C_Type * base, uint8_t address)
 
     if (base->SR1 & I2C_SR1_ADDR_MASK)
     {
-        /* Read SR2 to clear ADDR flag */
-        (void)base->SR2;
         match = true;
     }
     else
@@ -100,31 +101,29 @@ void I2C_MasterTransmit(I2C_Type * base, uint8_t *buff, uint32_t len, uint8_t sl
     /* Generate START condition */
     I2C1->CR1 |= I2C_CR1_START_MASK;
     /* Wait until SB was set */
-    while (!(I2C1->SR1 & I2C_SR1_SB_MASK) >> I2C_SR1_SB_SHIFT);
+    while (!(I2C1->SR1 & I2C_SR1_SB_MASK));
 
     /* Generate slave address */
     temp = 0;
     temp = slave_address << 1;
     /* To enter Transmitter mode, a master sends the slave address with LSB reset */
-    temp &= (1 << 0);
+    temp &= ~(1 << 0);
     I2C1->DR = temp & I2C_DR_DR_MASK;
     /* Wait until ADDR was set */
-    while (!(I2C1->SR1 & I2C_SR1_ADDR_MASK) >> I2C_SR1_ADDR_SHIFT);
-    /* Read SR2 to clear ADDR flag */
-    (void)I2C1->SR2;
+    while (!(I2C1->SR1 & I2C_SR1_ADDR_MASK));
 
     for (index = 0; index <len; index++)
     {
         /* Wait until DR and shift register is empty */
-        while (!(I2C1->SR1 & I2C_SR1_TXE_MASK) >> I2C_SR1_TXE_SHIFT);
+        while (!(I2C1->SR1 & I2C_SR1_TXE_MASK));
         /* Write data */
         I2C1->DR = buff[index] & I2C_DR_DR_MASK;
     }
 
     /* Wait TXE flag was set */
-    while (!(I2C1->SR1 & I2C_SR1_TXE_MASK) >> I2C_SR1_TXE_SHIFT);
+    while (!(I2C1->SR1 & I2C_SR1_TXE_MASK));
     /* Wait BTF flag was set */
-    while (!(I2C1->SR1 & I2C_SR1_BTF_MASK) >> I2C_SR1_BTF_SHIFT);
+    while (!(I2C1->SR1 & I2C_SR1_BTF_MASK));
 
     /* Generate STOP condition */
     I2C1->CR1 |= I2C_CR1_STOP_MASK;

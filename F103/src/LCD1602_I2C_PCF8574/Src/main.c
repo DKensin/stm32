@@ -100,6 +100,10 @@ void delay_us(uint32_t us)
 
 void delay_ms(uint32_t ms)
 {
-    TIM2->CNT = 0;
-    while ((TIM2->CNT) < (1000*ms));
+    uint32_t count;
+
+    for (count = 0; count < ms; count++)
+    {
+        delay_us(1000);         /* delay 1ms */
+    }
 }

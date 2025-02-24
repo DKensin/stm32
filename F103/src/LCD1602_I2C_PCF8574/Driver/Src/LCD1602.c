@@ -8,7 +8,9 @@
 #include "STM32F103C8T6.h"
 #include "I2c.h"
 
-static uint8_t slave_address = 0;
+#define DEFAULT_SLAVE_ADDRESS       (0x27u)
+
+static uint8_t slave_address = DEFAULT_SLAVE_ADDRESS;
 
 extern void delay_us(uint32_t us);
 extern void delay_ms(uint32_t ms);
